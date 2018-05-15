@@ -15,9 +15,12 @@ class ntp::service inherits ntp {
       hasrestart => true,
     }
 
-    if $ntp::service_ensure == 'running' and $osfamily == 'Darwin' {
-      if $facts['ntp_info']['network_time'] == false {
-        exec {'/usr/sbin/systemsetup -setusingnetworktime on': }
+
+    # on macOS 10.13+, use systemsetup to ensure that ntp will actually remain enabled.
+    if $::osfamily == 'Darwin' {
+      exec {'/usr/sbin/systemsetup -setusingnetworktime on':
+        subscribe   => Service['ntp'],
+        refreshonly => true
       }
     }
   }
