@@ -1,3 +1,13 @@
+<% [@servers].flatten.each do |server| -%>
+server <%= server %><% if @iburst_enable == true -%> iburst<% end %><% if @preferred_servers.include?(server) -%> prefer<% end %><% if @minpoll -%> minpoll <%= @minpoll %><% end %><% if @maxpoll -%> maxpoll <%= @maxpoll %><% end %>
+<% end -%>
+# Systemsetup on macOS will put the server in anyway, might as well do it here.
+# Set up servers for ntpd with next options:
+# server - IP address or DNS name of upstream NTP server
+# iburst - allow send sync packages faster if upstream unavailable
+# prefer - select preferrable server
+# minpoll - set minimal update frequency
+# maxpoll - set maximal update frequency
 # ntp.conf: Managed by puppet.
 #
 <% if @tinker == true and (@panic or @stepout) -%>
@@ -45,15 +55,6 @@ interface listen <%= interface %>
 broadcastclient
 <% end -%>
 
-# Set up servers for ntpd with next options:
-# server - IP address or DNS name of upstream NTP server
-# iburst - allow send sync packages faster if upstream unavailable
-# prefer - select preferrable server
-# minpoll - set minimal update frequency
-# maxpoll - set maximal update frequency
-<% [@servers].flatten.each do |server| -%>
-server <%= server %><% if @iburst_enable == true -%> iburst<% end %><% if @preferred_servers.include?(server) -%> prefer<% end %><% if @minpoll -%> minpoll <%= @minpoll %><% end %><% if @maxpoll -%> maxpoll <%= @maxpoll %><% end %>
-<% end -%>
 
 <% if @udlc -%>
 # Undisciplined Local Clock. This is a fake driver intended for backup

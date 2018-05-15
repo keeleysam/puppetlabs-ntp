@@ -244,7 +244,12 @@ class ntp::params {
         '127.0.0.1',
         '-6 ::1',
       ]
-      $service_name    = 'org.ntp.ntpd'
+      # This is renamed in 10.13
+      if versioncmp($facts['os']['macosx']['version']['major'], '10.12') > 0 {
+        $service_name    = 'com.apple.timed'
+      } else {
+        $service_name    = 'org.ntp.ntpd'
+      }
       $iburst_enable   = false
       $servers         = [
         'time.apple.com',
