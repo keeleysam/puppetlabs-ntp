@@ -16,7 +16,8 @@ class ntp::service inherits ntp {
     }
 
 
-    # on macOS 10.13+, use systemsetup to ensure that ntp will actually remain enabled.
+    # on macOS, use systemsetup to ensure that ntp will actually remain enabled.
+    # this is required on 10.13+ due to the switch to timed, but also works on earlier releases.
     if $::osfamily == 'Darwin' {
       exec {'/usr/sbin/systemsetup -setusingnetworktime on':
         subscribe   => Service['ntp'],
@@ -24,5 +25,4 @@ class ntp::service inherits ntp {
       }
     }
   }
-
 }
